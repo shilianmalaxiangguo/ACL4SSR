@@ -8,11 +8,12 @@
 | --- | --- |
 | [ACL4SSR_Online_Full_Personal_NoAuto.ini](ACL4SSR_Online_Full_Personal_NoAuto.ini) | 分组、默认选项、规则顺序的维护源；属于 subconverter 外部配置语法 |
 | [mihomo-base.yaml](mihomo-base.yaml) | Windows Fake-IP/DNS 基础配置 |
+| [group-ui.yaml](group-ui.yaml) | 妙妙屋/Mihomo 代理组图标元数据；用 Emoji，避免远程图片依赖 |
 | [acl4-full-personal__v3.yaml](acl4-full-personal__v3.yaml) | 生成的妙妙屋 X / Mihomo YAML 模板，节点由面板注入 |
 | [acl4-full-personal.candidate.lcf](acl4-full-personal.candidate.lcf) | Loon 候选模板；尚未完成当前 X 后端和设备验证 |
 | [build.py](build.py) | 从同一 INI 生成 YAML 与 Loon 候选，避免手动维护两套策略 |
 
-所有文件均不含节点凭据。YAML 的 `proxies: null`、Loon 的空 `[Proxy]` 是待注入位置，不能直接当成带节点的订阅使用。不要把 INI 当成 YAML 上传。生成器只支持本目录使用的 `select`、单个节点筛选表达式、HTTPS 文本规则和明确列出的内联规则，并不等于通用 subconverter。
+所有文件均不含节点凭据。YAML 的 `proxies: null`、Loon 的空 `[Proxy]` 是待注入位置，不能直接当成带节点的订阅使用。不要把 INI 当成 YAML 上传。生成器只支持本目录使用的 `select`、单个节点筛选表达式、HTTPS 文本规则和明确列出的内联规则，并不等于通用 subconverter。`group-ui.yaml` 中的 `icon` 会被写入 YAML 的 `proxy-groups[].icon`；它不是 Surge 的 `icon-url`，也不是妙妙屋网站 Logo。
 
 ## 分组与默认值
 
@@ -47,7 +48,7 @@ python -m pip install PyYAML
 python Personal/build.py
 ```
 
-将修改后的 INI、基础 YAML 和生成结果一并提交到自己的 fork；不修改上游原文件。通用规则 URL 继续引用 ACL4SSR 官方，Github/GitLab 引用 blackmatrix7，从而接收规则源更新。Mihomo 规则集每 24 小时更新，下载使用“节点选择”。修改 INI 本身不会自动触发构建或自动同步妙妙屋的本地模板副本。
+将修改后的 INI、`group-ui.yaml`、基础 YAML 和生成结果一并提交到自己的 fork；不修改上游原文件。通用规则 URL 继续引用 ACL4SSR 官方，Github/GitLab 引用 blackmatrix7，从而接收规则源更新。Mihomo 规则集每 24 小时更新，下载使用“节点选择”。修改 INI 本身不会自动触发构建或自动同步妙妙屋的本地模板副本。
 
 本目录发布在自己的 fork，可使用以下入口：
 

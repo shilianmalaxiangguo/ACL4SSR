@@ -11,6 +11,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent
 INI = ROOT / 'ACL4SSR_Online_Full_Personal_NoAuto.ini'
+UI = ROOT / 'group-ui.yaml'
 
 
 @dataclass(frozen=True)
@@ -66,12 +67,27 @@ def load_policy(path: Path) -> tuple[list[Group], list[Rule]]:
 
 def build() -> None:
     groups, rules = load_policy(INI)
+    ui = yaml.safe_load(UI.read_text(encoding='utf-8'))
+    ui_groups = ui.get('groups', {})
+    if not isinstance(ui_groups, dict):
+        raise ValueError('group-ui.yaml groups must be a mapping')
+    policy_names = {group.name for group in groups}
+    if set(ui_groups) != policy_names:
+        missing = sorted(policy_names - set(ui_groups))
+        extra = sorted(set(ui_groups) - policy_names)
+        raise ValueError(f'UI metadata does not match policy groups; missing={missing}, extra={extra}')
     config = yaml.safe_load((ROOT / 'mihomo-base.yaml').read_text(encoding='utf-8'))
     if any(key in config for key in ('proxies', 'proxy-providers', 'secret')):
         raise ValueError('The base must not contain nodes or credentials')
     config.update({'proxies': None, 'proxy-groups': [], 'rules': [], 'rule-providers': {}})
     for group in groups:
         item = {'name': group.name, 'type': 'select'}
+        metadata = ui_groups[group.name]
+        if not isinstance(metadata, dict) or not metadata.get('icon'):
+            raise ValueError(f'UI metadata needs an icon: {group.name}')
+        item['icon'] = metadata['icon']
+        if metadata.get('hidden'):
+            item['hidden'] = True
         if group.choices:
             item['proxies'] = list(group.choices)
         if group.expression:
