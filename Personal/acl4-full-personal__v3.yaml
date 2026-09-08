@@ -268,7 +268,7 @@ proxy-groups:
   - DIRECT
   - 🚀 节点选择
   include-all-proxies: true
-  filter: (网易|音乐|解锁|Music|NetEase)
+  filter: (网易|音乐|解锁|Music|NetEase)|^(DIRECT)$
 - name: 🎯 全球直连
   type: select
   icon: 🎯

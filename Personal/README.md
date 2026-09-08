@@ -57,6 +57,10 @@ python Personal/build.py
 
 妙妙屋选择“使用模板”，导入生成的 YAML，选择港美日节点后预览生成结果。每次模板结构变化后需重新导入/保存。妙妙屋的“分类勾选”与“使用模板”是独立生成模式，模板已自带完整分类；首次使用先生成测试订阅，检查客户端是否恢复了旧的同名组选择。
 
+2026-09-08 实测：新建模板选择 **Clash → 链接**，填写上方 YAML Raw 地址；文件已经是 V3 且自带 Fake-IP DNS，无需再执行 V2 转换。`📰 刷帖` 是策略组，三条 `DOMAIN-SUFFIX` 是把论坛流量送到该组的规则。GitHub 的 Sync fork、面板模板重新导入、客户端每 24 小时更新远程规则集，是三个独立动作。
+
+MMWX 0.5.3 会把显式 `DIRECT` 也按 `filter` 过滤；生成器现在将明确列出的 DIRECT/REJECT 加入筛选表达式，保留网易音乐默认直连。港美两节点的实际套餐订阅通过 Mihomo 1.19.30 校验及两地 HTTPS 出口测试，刷帖、AI、GitHub、网易音乐分流通过；日本空组被面板移除，TikTok 此时首选美国。独立测试启用了本地 Fake-IP DNS、关闭 TUN；不代表系统级 DNS 无泄漏、流媒体地区解锁或手机客户端已验收。
+
 ## Loon 边界
 
 Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mihomo DNS，也不能直接导入 Surge 配置。候选版把中国 IP 直连放在远程列表末尾，使用 ACL4SSR `ChinaIp.list`，与 Mihomo 的最终 GEOIP 数据来源不同。共享规则顺序、NameRegexFilter、节点注入及 REALITY/Vision 连接仍需在实际 Loon 上验证；当前文件不作为已验收的手机/Mac 正式订阅。
