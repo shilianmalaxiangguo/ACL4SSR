@@ -91,7 +91,12 @@ def build() -> None:
         if group.choices:
             item['proxies'] = list(group.choices)
         if group.expression:
-            item.update({'include-all-proxies': True, 'filter': group.expression})
+            expression = group.expression
+            # MMWX filters explicit system outbounds as well as injected nodes.
+            fixed_outbounds = [choice for choice in group.choices if choice in ('DIRECT', 'REJECT')]
+            if fixed_outbounds:
+                expression += '|^(' + '|'.join(fixed_outbounds) + ')$'
+            item.update({'include-all-proxies': True, 'filter': expression})
         config['proxy-groups'].append(item)
 
     loon = [
