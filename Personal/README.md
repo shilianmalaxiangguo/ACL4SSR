@@ -1,6 +1,6 @@
 # ACL4SSR Full NoAuto 个人扩展
 
-以 [ACL4SSR_Online_Full_NoAuto.ini](../Clash/config/ACL4SSR_Online_Full_NoAuto.ini) 为底稿，保留全部原有服务分类及规则源，增加刷帖、独立 Steam、TikTok、谷歌服务和 Github。ACL4SSR 原作及本目录派生配置遵循 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.zh)。基线为本 fork 的 `f7c4233`，2026-09-07 核验。
+以 [ACL4SSR_Online_Full_NoAuto.ini](../Clash/config/ACL4SSR_Online_Full_NoAuto.ini) 为底稿，保留全部原有服务分类及规则源，增加刷帖、独立 Steam、TikTok、谷歌服务和 Github。ACL4SSR 原作及本目录派生配置遵循 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.zh)。基线为本 fork 的 `f7c4233`，图标扩展提交为 `0450624`，2026-09-08 核验。
 
 ## 使用哪个文件
 
