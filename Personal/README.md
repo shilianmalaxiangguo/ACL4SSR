@@ -25,7 +25,8 @@
 - Twitter：默认美国，日本、香港、节点选择可选；规则取自 Shunt_Rules 的 Twitter 列表（6 条 `IP-CIDR`、`DOMAIN-KEYWORD,twitter`、26 条域名后缀），排在 ProxyGFWlist 之前，`twitter` 关键词因此不再落到节点选择。
 - TikTok：默认日本，美国和香港可选；分流不等于地区解锁。
 - 游戏平台、独立 Steam：默认 DIRECT，香港等可选。SteamCN 仍优先全球直连；该上游列表包含 steamcontent.com、steamusercontent.com 等较宽的后缀，并非精确的中国 CDN 地理识别。
-- 油管、奈飞、国外媒体、电报、谷歌服务、Github：默认跟随节点选择。
+- 油管：默认美国，节点选择、香港、日本可选；使用 ACL4SSR 自有 `YouTube.list`（17 条，含 `googlevideo.com`、`ytimg.com`、`youtu.be`、`youtubei.googleapis.com`），排在谷歌服务之前，因此 YouTube 全部走该组，不落到谷歌服务。
+- 奈飞、国外媒体、电报、谷歌服务、Github：默认跟随节点选择。
 - 哔哩哔哩、国内媒体、苹果、微软、Bing、OneDrive、谷歌 FCM、网易音乐：默认直连。
 - 广告拦截、应用净化：默认 REJECT，可手动切换 DIRECT。
 - 全球直连和漏网之鱼：保留原版选择组。
@@ -83,4 +84,5 @@ Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mih
 - 生成结果为 30 个分组、37 个规则源、42 条规则。Mihomo 缓存的 Twitter 规则集为 33 条（6 条 `IP-CIDR`、1 条 `DOMAIN-KEYWORD`、26 条 `DOMAIN-SUFFIX`），Claude 规则集为 3 条，注释行被跳过。
 - Mihomo 1.19.29 独立实例的连接链：`twitter.com`、`x.com`、`api.twitter.com`、`abs.twimg.com`、`video.twimg.com`、`t.co`、`twitterstat.us` 命中 `RuleSet Twitter`，`192.133.76.5` 与 `209.237.192.5` 命中同一规则集的 `IP-CIDR`，出口链都是 `🇺🇸 美国 01 → 🇺🇸 美国节点 → 🐦 Twitter`；`claude.ai`、`api.anthropic.com`、`console.anthropic.com`、`cdn.usefathom.com` 命中 `RuleSet Claude`，出口链为 `🇺🇸 美国 01 → 🇺🇸 美国节点 → 🤖 AI 服务`。两个分组的默认选项均为 `🇺🇸 美国节点`。
 - 对照项未受影响：`nodeseek.com` → 📰 刷帖（香港）、`www.google.com` → 🔍 谷歌服务、`github.com` → 🐱 Github、`www.baidu.com` → 🎯 全球直连（DIRECT）、未收录域名与 `1.1.1.1` → 🐟 漏网之鱼。
-- 该轮测试注入的是本机占位 SOCKS5 节点而非真实套餐，规则集下载被临时改为 DIRECT；验证的是规则文本、规则顺序与策略组归属，不代表美国出口真实连通、延迟、流媒体/AI 地区解锁或妙妙屋渲染。面板需重新导入模板才会带上 `🐦 Twitter` 分组。
+- 油管默认改为美国后复验：`www.youtube.com`、`music.youtube.com`、`youtu.be`、`i.ytimg.com`、`rr1---sn-abc.googlevideo.com`、`youtubei.googleapis.com` 全部命中 `RuleSet YouTube`，出口链为 `🇺🇸 美国 01 → 🇺🇸 美国节点 → 📹 油管视频`，分组默认值为 `🇺🇸 美国节点`；`www.google.com` 仍命中 🔍 谷歌服务（跟随节点选择）。
+- 该轮测试注入的是本机占位 SOCKS5 节点而非真实套餐，规则集下载被临时改为 DIRECT；验证的是规则文本、规则顺序与策略组归属，不代表美国出口真实连通、延迟、流媒体/AI 地区解锁或妙妙屋渲染。面板需重新导入模板才会带上 `🐦 Twitter` 分组；`📹 油管视频` 只是默认值变化，同样要重新导入，且客户端保留过同名组旧选择时需手动切回 `🇺🇸 美国节点`。
