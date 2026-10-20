@@ -97,6 +97,14 @@ proxy-groups:
   proxies:
   - 🇺🇸 美国节点
   - 🇯🇵 日本节点
+- name: 🐦 Twitter
+  type: select
+  icon: 🐦
+  proxies:
+  - 🇺🇸 美国节点
+  - 🇯🇵 日本节点
+  - 🇭🇰 香港节点
+  - 🚀 节点选择
 - name: 📰 刷帖
   type: select
   icon: 📰
@@ -118,9 +126,9 @@ proxy-groups:
   type: select
   icon: 📹
   proxies:
+  - 🇺🇸 美国节点
   - 🚀 节点选择
   - 🇭🇰 香港节点
-  - 🇺🇸 美国节点
   - 🇯🇵 日本节点
   - 🚀 手动切换
   - DIRECT
@@ -316,6 +324,8 @@ rules:
 - DOMAIN-SUFFIX,nodeseek.com,📰 刷帖
 - DOMAIN-SUFFIX,v2ex.com,📰 刷帖
 - DOMAIN-SUFFIX,linux.do,📰 刷帖
+- RULE-SET,Twitter,🐦 Twitter
+- RULE-SET,Claude,🤖 AI 服务
 - RULE-SET,LocalAreaNetwork,🎯 全球直连
 - RULE-SET,AI,🤖 AI 服务
 - RULE-SET,OpenAi,🤖 AI 服务
@@ -354,6 +364,22 @@ rules:
 - GEOIP,CN,🎯 全球直连,no-resolve
 - MATCH,🐟 漏网之鱼
 rule-providers:
+  Twitter:
+    type: http
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Twitter.lsr
+    path: ./ruleset/acl4-personal-Twitter.list
+    interval: 86400
+    proxy: 🚀 节点选择
+  Claude:
+    type: http
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Claude.lsr
+    path: ./ruleset/acl4-personal-Claude.list
+    interval: 86400
+    proxy: 🚀 节点选择
   LocalAreaNetwork:
     type: http
     behavior: classical
