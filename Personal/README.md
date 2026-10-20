@@ -1,6 +1,6 @@
 # ACL4SSR Full NoAuto 个人扩展
 
-以 [ACL4SSR_Online_Full_NoAuto.ini](../Clash/config/ACL4SSR_Online_Full_NoAuto.ini) 为底稿，保留全部原有服务分类及规则源，增加刷帖、独立 Steam、TikTok、谷歌服务、Github、Twitter 与 Claude。ACL4SSR 原作及本目录派生配置遵循 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.zh)。基线为本 fork 的 `f7c4233`，图标扩展提交为 `0450624`（2026-09-08 核验）；2026-10-13 已同步上游 `802e3ab`（fork 与上游差距为 0），并引用 [Keviin560/Shunt_Rules](https://github.com/Keviin560/Shunt_Rules) 的 Twitter/Claude 规则。
+以 [ACL4SSR_Online_Full_NoAuto.ini](../Clash/config/ACL4SSR_Online_Full_NoAuto.ini) 为底稿，保留全部原有服务分类及规则源，增加刷帖、独立 Steam、TikTok、谷歌服务、Github、Twitter 与 Claude，并接入 Shunt_Rules 的完整 AI_Rules。ACL4SSR 原作及本目录派生配置遵循 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.zh)。基线为本 fork 的 `f7c4233`，图标扩展提交为 `0450624`（2026-09-08 核验）；2026-10-13 已同步上游 `802e3ab`（fork 与上游差距为 0），并引用 [Keviin560/Shunt_Rules](https://github.com/Keviin560/Shunt_Rules) 的 Twitter/Claude 规则；2026-10-20 接入完整 `AI_Rules.lsr`，并将 Github 默认出口改为美国。
 
 ## 使用哪个文件
 
@@ -17,21 +17,22 @@
 
 ## 分组与默认值
 
-共 30 个手动选择组，无自动测速切换：
+共 30 个手动选择组，无自动测速切换。当前生成结果为 30 个分组、38 个规则源、43 条规则；分组数不变，`AI_Rules` 新增 1 个规则源和 1 条规则。
 
 - 香港、美国、日本：沿用上游已有地区组，调整名称匹配；仅保留现有三地。
 - 节点选择、刷帖：默认香港。刷帖匹配 NodeSeek、V2EX、Linux.do 及子域名。
-- AI 服务：默认美国，日本可选；规则提前到微软、谷歌和 Github 之前，并在 ACL4SSR `AI.list` 之外补入 Shunt_Rules 的 Claude 列表（`anthropic.com`、`claude.ai`、`cdn.usefathom.com`）。
-- Twitter：默认美国，日本、香港、节点选择可选；规则取自 Shunt_Rules 的 Twitter 列表（6 条 `IP-CIDR`、`DOMAIN-KEYWORD,twitter`、26 条域名后缀），排在 ProxyGFWlist 之前，`twitter` 关键词因此不再落到节点选择。
+- AI 服务：默认美国，日本可选；在 AI 相关规则中最先加载 Shunt_Rules 的完整 `AI_Rules.lsr`，覆盖 ChatGPT、Claude、Gemini、Copilot、Grok、Cursor、Windsurf、Hugging Face、OpenRouter 等，排在 Twitter、微软、谷歌和 Github 之前。ACL4SSR `AI.list`、`OpenAi.list` 与 Shunt_Rules `Claude.lsr` 保留作补充，不删除，也不新增 AI 策略组。
+- Twitter：默认美国，日本、香港、节点选择可选；规则取自 Shunt_Rules 的 Twitter 列表（6 条 `IP-CIDR`、`DOMAIN-KEYWORD,twitter`、26 条域名后缀），排在 ProxyGFWlist 之前，`twitter` 关键词因此不再落到节点选择；`grok.x.com` 已由更靠前的 AI_Rules 接管，不会先命中 Twitter。
 - TikTok：默认日本，美国和香港可选；分流不等于地区解锁。
 - 游戏平台、独立 Steam：默认 DIRECT，香港等可选。SteamCN 仍优先全球直连；该上游列表包含 steamcontent.com、steamusercontent.com 等较宽的后缀，并非精确的中国 CDN 地理识别。
 - 油管：默认美国，节点选择、香港、日本可选；使用 ACL4SSR 自有 `YouTube.list`（17 条，含 `googlevideo.com`、`ytimg.com`、`youtu.be`、`youtubei.googleapis.com`），排在谷歌服务之前，因此 YouTube 全部走该组，不落到谷歌服务。
-- 奈飞、国外媒体、电报、谷歌服务、Github：默认跟随节点选择。
+- 奈飞、国外媒体、电报、谷歌服务：默认跟随节点选择。
+- Github：默认美国，节点选择、香港、日本、DIRECT 可选；Github 与 GitLab 共用该组和两条 blackmatrix7 规则源，两者默认都走美国，不再跟随节点选择。
 - 哔哩哔哩、国内媒体、苹果、微软、Bing、OneDrive、谷歌 FCM、网易音乐：默认直连。
 - 广告拦截、应用净化：默认 REJECT，可手动切换 DIRECT。
 - 全球直连和漏网之鱼：保留原版选择组。
 
-上游的台湾、新加坡、韩国及按名字猜测的“奈飞节点”筛选组未生成，避免当前三条自建节点产生空组；巴哈姆特服务组仍保留，默认跟随节点选择，但当前没有台湾出口，不保证地区内容可用。地区默认值为新配置的第一选项；客户端保存过同名组选择时可能恢复旧选项，需检查。
+上游的台湾、新加坡、韩国及按名字猜测的“奈飞节点”筛选组未生成，避免当前三条自建节点产生空组；巴哈姆特服务组仍保留，默认跟随节点选择，但当前没有台湾出口，不保证地区内容可用。地区默认值为新配置的第一选项；客户端保存过同名组选择时可能恢复旧选项，更新订阅后需检查 `🐱 Github` 和 `🤖 AI 服务` 是否选中 `🇺🇸 美国节点`。
 
 ## 日常维护
 
@@ -50,9 +51,11 @@ python -m pip install PyYAML
 python Personal/build.py
 ```
 
-将修改后的 INI、`group-ui.yaml`、基础 YAML 和生成结果一并提交到自己的 fork；不修改上游原文件。通用规则 URL 继续引用 ACL4SSR 官方，Github/GitLab 引用 blackmatrix7，Twitter/Claude 引用 Keviin560/Shunt_Rules，从而接收规则源更新。Mihomo 规则集每 24 小时更新，下载使用“节点选择”。修改 INI 本身不会自动触发构建或自动同步妙妙屋的本地模板副本。
+将修改后的 INI、`group-ui.yaml`、基础 YAML 和生成结果一并提交到自己的 fork；不修改上游原文件。通用规则 URL 继续引用 ACL4SSR 官方，Github/GitLab 引用 blackmatrix7，AI_Rules/Twitter/Claude 引用 Keviin560/Shunt_Rules，从而接收规则源更新。所有 Mihomo 远程规则源保持 `interval: 86400`，即每 24 小时更新，下载使用“节点选择”；`RULE-SET,AI_Rules,🤖 AI 服务` 决定的是 AI 网站流量的出口，两者用途不同。修改 INI 本身不会自动触发构建或自动同步妙妙屋的本地模板副本。
 
-Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（纯文本）两套产物。本目录只引用 `.lsr`：它是 `IP-CIDR,...,no-resolve`、`DOMAIN-KEYWORD`、`DOMAIN-SUFFIX` 组成的文本规则，Mihomo 按 `behavior: classical` 文本规则集读取，Loon 按 `[Remote Rule]` 读取，两端因此共用同一行 `ruleset=`。增加同类规则时照抄一行即可，例如 `ruleset=🐦 Twitter,https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Twitter.lsr`；不要改用 `.mrs`，生成器只处理文本规则，`.mrs` 需要额外的 `format: mrs` 规则集与独立文件后缀。
+本轮没有修改 Fake-IP、DNS、节点筛选表达式或图标，只调整了 Github 组的默认顺序并新增 AI_Rules；`mihomo-base.yaml`、`group-ui.yaml`、`proxies: null` 均保持原样。
+
+Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（纯文本）两套产物。本目录只引用 `.lsr`：文本可含 `DOMAIN`、`DOMAIN-SUFFIX`、`DOMAIN-KEYWORD`、`DOMAIN-REGEX`、`IP-CIDR,...,no-resolve` 等类型，Mihomo 按 `behavior: classical` 文本规则集读取，Loon 按 `[Remote Rule]` 读取，两端因此共用同一行 `ruleset=`。AI_Rules、Twitter、Claude 均照此接入，例如 `ruleset=🤖 AI 服务,https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/AI_Rules.lsr`；不要改用 `.mrs`，生成器只处理文本规则，`.mrs` 需要额外的 `format: mrs` 规则集与独立文件后缀。
 
 本目录发布在自己的 fork，可使用以下入口：
 
@@ -63,11 +66,13 @@ Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（
 
 2026-09-08 实测：新建模板选择 **Clash → 链接**，填写上方 YAML Raw 地址；文件已经是 V3 且自带 Fake-IP DNS，无需再执行 V2 转换。`📰 刷帖` 是策略组，三条 `DOMAIN-SUFFIX` 是把论坛流量送到该组的规则。GitHub 的 Sync fork、面板模板重新导入、客户端每 24 小时更新远程规则集，是三个独立动作。
 
-MMWX 0.5.3 会把显式 `DIRECT` 也按 `filter` 过滤；生成器现在将明确列出的 DIRECT/REJECT 加入筛选表达式，保留网易音乐默认直连。港美两节点的实际套餐订阅通过 Mihomo 1.19.30 校验及两地 HTTPS 出口测试，刷帖、AI、GitHub、网易音乐分流通过；日本空组被面板移除，TikTok 此时首选美国。独立测试启用了本地 Fake-IP DNS、关闭 TUN；不代表系统级 DNS 无泄漏、流媒体地区解锁或手机客户端已验收。
+本次 AI_Rules 与 Github 默认值的改动落地仍需三个独立步骤：1) 将 `Personal/` 修改提交并 `git push` 到自己的 GitHub fork；2) 在妙妙屋重新导入/保存 `acl4-full-personal__v3.yaml` 模板，或更新模板 Raw 地址后重新拉取；3) 对已保存的订阅重新生成一次。只完成 GitHub 推送不会自动改变妙妙屋中已保存的模板或订阅，客户端也不会仅因规则源更新就切换已有同名组选择。
+
+历史记录（2026-09-08）：MMWX 0.5.3 会把显式 `DIRECT` 也按 `filter` 过滤；生成器已将明确列出的 DIRECT/REJECT 加入筛选表达式，保留网易音乐默认直连。港美两节点的实际套餐订阅通过 Mihomo 1.19.30 校验及两地 HTTPS 出口测试，刷帖、AI、GitHub、网易音乐分流通过；日本空组被面板移除，TikTok 此时首选美国。独立测试启用了本地 Fake-IP DNS、关闭 TUN；不代表系统级 DNS 无泄漏、流媒体地区解锁或手机客户端已验收。
 
 ## Loon 边界
 
-Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mihomo DNS，也不能直接导入 Surge 配置。候选版把中国 IP 直连放在远程列表末尾，使用 ACL4SSR `ChinaIp.list`，与 Mihomo 的最终 GEOIP 数据来源不同。共享规则顺序、NameRegexFilter、节点注入及 REALITY/Vision 连接仍需在实际 Loon 上验证；当前文件不作为已验收的手机/Mac 正式订阅。
+Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mihomo DNS，也不能直接导入 Surge 配置。候选版把中国 IP 直连放在远程列表末尾，使用 ACL4SSR `ChinaIp.list`，与 Mihomo 的最终 GEOIP 数据来源不同。生成器已把 `AI_Rules`、`Twitter`、`Claude` 三条 `.lsr` 和 Github 新默认值写入候选文件，但它仍是候选模板。共享规则顺序、NameRegexFilter、节点注入及 REALITY/Vision 连接仍需在实际 Loon 上验证；当前文件不作为已验收的手机/Mac 正式订阅，也不宣称已在真实 Loon 设备上通过。
 
 ## 历史验证（2026-09-07）
 
@@ -78,7 +83,7 @@ Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mih
 - 上游若干列表仍包含旧 `URL-REGEX` 行，Mihomo 不支持并跳过，其他有效规则正常加载；不能把保留源 URL 理解为所有原始行均生效。没有引入 MITM。
 - 测试使用独立实例，绑定物理网卡并关闭测试实例 TUN/DNS；不代表日常 TUN DNS、流媒体/AI 地区解锁、速度或妙妙屋实际渲染已经验收。
 
-## 本轮验证（2026-10-13）
+## 历史验证（2026-10-13）
 
 - 同步上游后 fork 与上游差距为 0（`upstream/master...origin/master` 计数 `0 4`），上游 `802e3ab` 已在 fork 历史中；个人改动仍只落在 `Personal/`。
 - 生成结果为 30 个分组、37 个规则源、42 条规则。Mihomo 缓存的 Twitter 规则集为 33 条（6 条 `IP-CIDR`、1 条 `DOMAIN-KEYWORD`、26 条 `DOMAIN-SUFFIX`），Claude 规则集为 3 条，注释行被跳过。
@@ -86,3 +91,11 @@ Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mih
 - 对照项未受影响：`nodeseek.com` → 📰 刷帖（香港）、`www.google.com` → 🔍 谷歌服务、`github.com` → 🐱 Github、`www.baidu.com` → 🎯 全球直连（DIRECT）、未收录域名与 `1.1.1.1` → 🐟 漏网之鱼。
 - 油管默认改为美国后复验：`www.youtube.com`、`music.youtube.com`、`youtu.be`、`i.ytimg.com`、`rr1---sn-abc.googlevideo.com`、`youtubei.googleapis.com` 全部命中 `RuleSet YouTube`，出口链为 `🇺🇸 美国 01 → 🇺🇸 美国节点 → 📹 油管视频`，分组默认值为 `🇺🇸 美国节点`；`www.google.com` 仍命中 🔍 谷歌服务（跟随节点选择）。
 - 该轮测试注入的是本机占位 SOCKS5 节点而非真实套餐，规则集下载被临时改为 DIRECT；验证的是规则文本、规则顺序与策略组归属，不代表美国出口真实连通、延迟、流媒体/AI 地区解锁或妙妙屋渲染。面板需重新导入模板才会带上 `🐦 Twitter` 分组；`📹 油管视频` 只是默认值变化，同样要重新导入，且客户端保留过同名组旧选择时需手动切回 `🇺🇸 美国节点`。
+
+## 远程服务器验证（既有结果，2026-10-20 记录）
+
+- 以下为远程服务器的既有测试结果，不是本机测试，也不是 Loon 设备验收。测试在远程测试机上使用占位 SOCKS5 出站，只验证规则加载、匹配和策略归属。
+- Mihomo 1.19.30 隔离测试通过；AI_Rules 当时成功加载 191 条（163 条 `DOMAIN-SUFFIX`、27 条 `DOMAIN`、1 条 `DOMAIN-REGEX`），29 项分流检查通过。
+- 检查覆盖 GitHub/GitLab、ChatGPT、Claude、Gemini、Copilot、Grok、Cursor、Windsurf、Hugging Face、OpenRouter，以及 Twitter、Google、YouTube、刷帖的回归项；Google、刷帖等仍保持原策略，没有改成美国。
+- 191 是当时的规则条数，上游列表后续可能增减，不是今后更新必须满足的固定值；配置继续引用远程 URL 自动更新，不复制或固定域名。
+- 该结果不代表真实美国节点连通、AI 地区解锁、DNS 无泄漏或 Loon 设备通过。

@@ -26,7 +26,7 @@ test-timeout = 5
 🌍 国外媒体 = select, 🚀 节点选择, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🚀 手动切换, DIRECT
 🌏 国内媒体 = select, DIRECT, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, 🚀 手动切换
 🔍 谷歌服务 = select, 🚀 节点选择, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点
-🐱 Github = select, 🚀 节点选择, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇯🇵 日本节点, DIRECT
+🐱 Github = select, 🇺🇸 美国节点, 🚀 节点选择, 🇭🇰 香港节点, 🇯🇵 日本节点, DIRECT
 📢 谷歌FCM = select, DIRECT, 🚀 节点选择, 🇺🇸 美国节点, 🇭🇰 香港节点, 🇯🇵 日本节点, 🚀 手动切换
 Ⓜ️ 微软Bing = select, DIRECT, 🚀 节点选择, 🇺🇸 美国节点, 🇭🇰 香港节点, 🇯🇵 日本节点, 🚀 手动切换
 Ⓜ️ 微软云盘 = select, DIRECT, 🚀 节点选择, 🇺🇸 美国节点, 🇭🇰 香港节点, 🇯🇵 日本节点, 🚀 手动切换
@@ -50,6 +50,7 @@ DOMAIN-SUFFIX,linux.do,📰 刷帖
 FINAL,🐟 漏网之鱼
 
 [Remote Rule]
+https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/AI_Rules.lsr, policy=🤖 AI 服务, tag=personal-AI_Rules, enabled=true
 https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Twitter.lsr, policy=🐦 Twitter, tag=personal-Twitter, enabled=true
 https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Claude.lsr, policy=🤖 AI 服务, tag=personal-Claude, enabled=true
 https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list, policy=🎯 全球直连, tag=personal-LocalAreaNetwork, enabled=true
