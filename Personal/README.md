@@ -1,6 +1,6 @@
 # ACL4SSR Full NoAuto 个人扩展
 
-以 [ACL4SSR_Online_Full_NoAuto.ini](../Clash/config/ACL4SSR_Online_Full_NoAuto.ini) 为底稿，保留全部原有服务分类及规则源，增加刷帖、独立 Steam、TikTok、谷歌服务、Github、Twitter 与 Claude，并接入 Shunt_Rules 的完整 AI_Rules。ACL4SSR 原作及本目录派生配置遵循 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.zh)。基线为本 fork 的 `f7c4233`，图标扩展提交为 `0450624`（2026-09-08 核验）；2026-10-13 已同步上游 `802e3ab`（fork 与上游差距为 0），并引用 [Keviin560/Shunt_Rules](https://github.com/Keviin560/Shunt_Rules) 的 Twitter/Claude 规则；2026-10-20 接入完整 `AI_Rules.lsr`，并将 Github 默认出口改为美国。
+以 [ACL4SSR_Online_Full_NoAuto.ini](../Clash/config/ACL4SSR_Online_Full_NoAuto.ini) 为底稿，保留全部原有服务分类及规则源，增加刷帖、独立 Steam、TikTok、谷歌服务、Github、Twitter 与 Claude，并接入 Shunt_Rules 的完整 AI_Rules。ACL4SSR 原作及本目录派生配置遵循 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.zh)。基线为本 fork 的 `f7c4233`，图标扩展提交为 `0450624`（2026-09-08 核验）；2026-10-13 已同步上游 `802e3ab`（fork 与上游差距为 0），并引用 [Keviin560/Shunt_Rules](https://github.com/Keviin560/Shunt_Rules) 的 Twitter/Claude 规则；2026-10-20 接入完整 `AI_Rules.lsr`，并将 Github 默认出口改为美国；2026-10-28 把 `📰 刷帖` 从手动选择改为回落组。
 
 ## 使用哪个文件
 
@@ -13,14 +13,15 @@
 | [acl4-full-personal.candidate.lcf](acl4-full-personal.candidate.lcf) | Loon 候选模板；尚未完成当前 X 后端和设备验证 |
 | [build.py](build.py) | 从同一 INI 生成 YAML 与 Loon 候选，避免手动维护两套策略 |
 
-所有文件均不含节点凭据。YAML 的 `proxies: null`、Loon 的空 `[Proxy]` 是待注入位置，不能直接当成带节点的订阅使用。不要把 INI 当成 YAML 上传。生成器只支持本目录使用的 `select`、单个节点筛选表达式、HTTPS 文本规则和明确列出的内联规则，并不等于通用 subconverter。`group-ui.yaml` 中的 `icon` 会被写入 YAML 的 `proxy-groups[].icon`；它不是 Surge 的 `icon-url`，也不是妙妙屋网站 Logo。
+所有文件均不含节点凭据。YAML 的 `proxies: null`、Loon 的空 `[Proxy]` 是待注入位置，不能直接当成带节点的订阅使用。不要把 INI 当成 YAML 上传。生成器只支持本目录使用的 `select`/`fallback`、单个节点筛选表达式、HTTPS 文本规则和明确列出的内联规则，并不等于通用 subconverter。`group-ui.yaml` 中的 `icon` 会被写入 YAML 的 `proxy-groups[].icon`；它不是 Surge 的 `icon-url`，也不是妙妙屋网站 Logo。
 
 ## 分组与默认值
 
-共 30 个手动选择组，无自动测速切换。当前生成结果为 30 个分组、38 个规则源、43 条规则；分组数不变，`AI_Rules` 新增 1 个规则源和 1 条规则。
+共 30 个组：29 个手动选择组加 1 个回落组（`📰 刷帖`），无自动测速切换。当前生成结果为 30 个分组、38 个规则源、43 条规则。
 
 - 香港、美国、日本：沿用上游已有地区组，调整名称匹配；仅保留现有三地。
-- 节点选择、刷帖：默认香港。刷帖匹配 NodeSeek、V2EX、Linux.do 及子域名。
+- 节点选择：默认香港。
+- 刷帖：回落组，成员顺序为香港 → 美国 → 日本，按顺序取第一个健康检查通过的组；检测地址 `https://www.gstatic.com/generate_204`，每 120 秒检查一次，`lazy: false`、`timeout: 3000`、`max-failed-times: 2`。匹配 NodeSeek、V2EX、Linux.do 及子域名。
 - AI 服务：默认美国，日本可选；在 AI 相关规则中最先加载 Shunt_Rules 的完整 `AI_Rules.lsr`，覆盖 ChatGPT、Claude、Gemini、Copilot、Grok、Cursor、Windsurf、Hugging Face、OpenRouter 等，排在 Twitter、微软、谷歌和 Github 之前。ACL4SSR `AI.list`、`OpenAi.list` 与 Shunt_Rules `Claude.lsr` 保留作补充，不删除，也不新增 AI 策略组。
 - Twitter：默认美国，日本、香港、节点选择可选；规则取自 Shunt_Rules 的 Twitter 列表（6 条 `IP-CIDR`、`DOMAIN-KEYWORD,twitter`、26 条域名后缀），排在 ProxyGFWlist 之前，`twitter` 关键词因此不再落到节点选择；`grok.x.com` 已由更靠前的 AI_Rules 接管，不会先命中 Twitter。
 - TikTok：默认日本，美国和香港可选；分流不等于地区解锁。
@@ -34,6 +35,8 @@
 
 上游的台湾、新加坡、韩国及按名字猜测的“奈飞节点”筛选组未生成，避免当前三条自建节点产生空组；巴哈姆特服务组仍保留，默认跟随节点选择，但当前没有台湾出口，不保证地区内容可用。地区默认值为新配置的第一选项；客户端保存过同名组选择时可能恢复旧选项，更新订阅后需检查 `🐱 Github` 和 `🤖 AI 服务` 是否选中 `🇺🇸 美国节点`。
 
+回落组不等于即时切换：Mihomo 只在健康检查判定失败、或连续拨号失败达到 `max-failed-times` 后才会换下一个成员，`interval: 120` 意味着最坏情况要等一个检查周期；`lazy: false` 让它闲置时也保持检查。回落组的优先级就是成员顺序，配置里没有“默认成员”字段，面板/API 仍可临时钉住某个成员。妙妙屋是否会原样保留 `type: fallback` 以及 `url`/`interval`/`lazy`/`timeout`/`max-failed-times` 字段，需要实际预览确认。检测地址默认用 Mihomo 自带的 `generate_204`，因为 Mihomo 健康检查发的是 HTTP `HEAD`，本机无法验证论坛站点对 `HEAD` 的响应；想改成按站点可达性判定，把 INI 刷帖行末尾的地址换成 `https://www.nodeseek.com/` 即可。
+
 ## 日常维护
 
 修改个人 INI 即可维护策略。例如增加论坛：
@@ -42,7 +45,7 @@
 ruleset=📰 刷帖,[]DOMAIN-SUFFIX,example.org
 ```
 
-将它放在现有三条刷帖规则旁。调整默认出口时，把对应 `custom_proxy_group` 的目标选项放到第一位。Windows DNS 则编辑 `mihomo-base.yaml`。
+将它放在现有三条刷帖规则旁。调整默认出口时，把对应 `custom_proxy_group` 的目标选项放到第一位；回落组则调整成员顺序，并在行末追加检测地址与检查间隔。Windows DNS 则编辑 `mihomo-base.yaml`。
 
 安装 Python 和 PyYAML 后，在仓库根目录运行：
 
@@ -53,7 +56,7 @@ python Personal/build.py
 
 将修改后的 INI、`group-ui.yaml`、基础 YAML 和生成结果一并提交到自己的 fork；不修改上游原文件。通用规则 URL 继续引用 ACL4SSR 官方，Github/GitLab 引用 blackmatrix7，AI_Rules/Twitter/Claude 引用 Keviin560/Shunt_Rules，从而接收规则源更新。所有 Mihomo 远程规则源保持 `interval: 86400`，即每 24 小时更新，下载使用“节点选择”；`RULE-SET,AI_Rules,🤖 AI 服务` 决定的是 AI 网站流量的出口，两者用途不同。修改 INI 本身不会自动触发构建或自动同步妙妙屋的本地模板副本。
 
-本轮没有修改 Fake-IP、DNS、节点筛选表达式或图标，只调整了 Github 组的默认顺序并新增 AI_Rules；`mihomo-base.yaml`、`group-ui.yaml`、`proxies: null` 均保持原样。
+本轮没有修改 Fake-IP、DNS、节点筛选表达式或图标，只把 `📰 刷帖` 改成回落组并给生成器加上 `fallback` 支持；`mihomo-base.yaml`、`group-ui.yaml`、`proxies: null` 均保持原样。
 
 Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（纯文本）两套产物。本目录只引用 `.lsr`：文本可含 `DOMAIN`、`DOMAIN-SUFFIX`、`DOMAIN-KEYWORD`、`DOMAIN-REGEX`、`IP-CIDR,...,no-resolve` 等类型，Mihomo 按 `behavior: classical` 文本规则集读取，Loon 按 `[Remote Rule]` 读取，两端因此共用同一行 `ruleset=`。AI_Rules、Twitter、Claude 均照此接入，例如 `ruleset=🤖 AI 服务,https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/AI_Rules.lsr`；不要改用 `.mrs`，生成器只处理文本规则，`.mrs` 需要额外的 `format: mrs` 规则集与独立文件后缀。
 
@@ -66,13 +69,13 @@ Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（
 
 2026-09-08 实测：新建模板选择 **Clash → 链接**，填写上方 YAML Raw 地址；文件已经是 V3 且自带 Fake-IP DNS，无需再执行 V2 转换。`📰 刷帖` 是策略组，三条 `DOMAIN-SUFFIX` 是把论坛流量送到该组的规则。GitHub 的 Sync fork、面板模板重新导入、客户端每 24 小时更新远程规则集，是三个独立动作。
 
-本次 AI_Rules 与 Github 默认值的改动落地仍需三个独立步骤：1) 将 `Personal/` 修改提交并 `git push` 到自己的 GitHub fork；2) 在妙妙屋重新导入/保存 `acl4-full-personal__v3.yaml` 模板，或更新模板 Raw 地址后重新拉取；3) 对已保存的订阅重新生成一次。只完成 GitHub 推送不会自动改变妙妙屋中已保存的模板或订阅，客户端也不会仅因规则源更新就切换已有同名组选择。
+本次改动落地仍需三个独立步骤：1) 将 `Personal/` 修改提交并 `git push` 到自己的 GitHub fork；2) 在妙妙屋重新导入/保存 `acl4-full-personal__v3.yaml` 模板，或更新模板 Raw 地址后重新拉取；3) 对已保存的订阅重新生成一次。只完成 GitHub 推送不会自动改变妙妙屋中已保存的模板或订阅，客户端也不会仅因规则源更新就切换已有同名组选择。
 
 历史记录（2026-09-08）：MMWX 0.5.3 会把显式 `DIRECT` 也按 `filter` 过滤；生成器已将明确列出的 DIRECT/REJECT 加入筛选表达式，保留网易音乐默认直连。港美两节点的实际套餐订阅通过 Mihomo 1.19.30 校验及两地 HTTPS 出口测试，刷帖、AI、GitHub、网易音乐分流通过；日本空组被面板移除，TikTok 此时首选美国。独立测试启用了本地 Fake-IP DNS、关闭 TUN；不代表系统级 DNS 无泄漏、流媒体地区解锁或手机客户端已验收。
 
 ## Loon 边界
 
-Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mihomo DNS，也不能直接导入 Surge 配置。候选版把中国 IP 直连放在远程列表末尾，使用 ACL4SSR `ChinaIp.list`，与 Mihomo 的最终 GEOIP 数据来源不同。生成器已把 `AI_Rules`、`Twitter`、`Claude` 三条 `.lsr` 和 Github 新默认值写入候选文件，但它仍是候选模板。共享规则顺序、NameRegexFilter、节点注入及 REALITY/Vision 连接仍需在实际 Loon 上验证；当前文件不作为已验收的手机/Mac 正式订阅，也不宣称已在真实 Loon 设备上通过。
+Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mihomo DNS，也不能直接导入 Surge 配置。候选版把中国 IP 直连放在远程列表末尾，使用 ACL4SSR `ChinaIp.list`，与 Mihomo 的最终 GEOIP 数据来源不同。生成器已把 `AI_Rules`、`Twitter`、`Claude` 三条 `.lsr`、Github 新默认值和 `📰 刷帖 = fallback, ...` 写入候选文件，但它仍是候选模板；Loon 的 fallback 参数语法（`url`、`interval`）也尚未在真机核对。共享规则顺序、NameRegexFilter、节点注入及 REALITY/Vision 连接仍需在实际 Loon 上验证；当前文件不作为已验收的手机/Mac 正式订阅，也不宣称已在真实 Loon 设备上通过。
 
 ## 历史验证（2026-09-07）
 

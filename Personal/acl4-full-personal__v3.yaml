@@ -1,6 +1,6 @@
 # ACL4SSR Full NoAuto 个人扩展版 / CC-BY-SA-4.0
 # 由 Personal/build.py 生成；修改个人 INI 和 mihomo-base.yaml 后重新生成。
-# 不含节点，供妙妙屋 X 注入；全部手动选择。
+# 不含节点，供妙妙屋 X 注入；除刷帖为回落组外全部手动选择。
 mode: rule
 log-level: info
 ipv6: false
@@ -106,12 +106,17 @@ proxy-groups:
   - 🇭🇰 香港节点
   - 🚀 节点选择
 - name: 📰 刷帖
-  type: select
+  type: fallback
   icon: 📰
   proxies:
   - 🇭🇰 香港节点
   - 🇺🇸 美国节点
   - 🇯🇵 日本节点
+  url: https://www.gstatic.com/generate_204
+  interval: 120
+  lazy: false
+  timeout: 3000
+  max-failed-times: 2
 - name: 📲 电报消息
   type: select
   icon: 📲
