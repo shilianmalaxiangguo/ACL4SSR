@@ -134,6 +134,7 @@ def build() -> None:
         '[General]', 'dns-server = system, 119.29.29.29, 223.5.5.5',
         'sni-sniffing = true', 'udp-fallback-mode = REJECT',
         'allow-wifi-access = false', 'interface-mode = auto', 'test-timeout = 5',
+        'proxy-test-url = https://cp.cloudflare.com/generate_204',
         '', '[Proxy]', '# 由支持 Loon 模板的生成器注入实际节点。', '', '[Proxy Group]',
     ]
     for group in groups:

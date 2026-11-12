@@ -112,6 +112,7 @@ proxy-groups:
   - 🇭🇰 香港节点
   - 🇺🇸 美国节点
   - 🇯🇵 日本节点
+  - 🚀 节点选择
   url: https://www.gstatic.com/generate_204
   interval: 120
   lazy: false

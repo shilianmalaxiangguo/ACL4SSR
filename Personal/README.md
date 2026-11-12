@@ -21,7 +21,7 @@
 
 - 香港、美国、日本：沿用上游已有地区组，调整名称匹配；仅保留现有三地。
 - 节点选择：默认香港。
-- 刷帖：回落组，成员顺序为香港 → 美国 → 日本，按顺序取第一个健康检查通过的组；检测地址 `https://www.gstatic.com/generate_204`，每 120 秒检查一次，`lazy: false`、`timeout: 3000`、`max-failed-times: 2`。匹配 NodeSeek、V2EX、Linux.do 及子域名。
+- 刷帖：回落组，成员顺序为香港 → 美国 → 日本 → 节点选择，按顺序取第一个健康检查通过的组；检测地址 `https://www.gstatic.com/generate_204`，每 120 秒检查一次，`lazy: false`、`timeout: 3000`、`max-failed-times: 2`。匹配 NodeSeek、V2EX、Linux.do 及子域名。“节点选择”作为最后一个回落出口，可通过其中的“手动切换”选择其他地区；它仍默认香港，未调整时可能与前面的香港出口重复。
 - AI 服务：默认美国，日本可选；在 AI 相关规则中最先加载 Shunt_Rules 的完整 `AI_Rules.lsr`，覆盖 ChatGPT、Claude、Gemini、Copilot、Grok、Cursor、Windsurf、Hugging Face、OpenRouter 等，排在 Twitter、微软、谷歌和 Github 之前。ACL4SSR `AI.list`、`OpenAi.list` 与 Shunt_Rules `Claude.lsr` 保留作补充，不删除，也不新增 AI 策略组。
 - Twitter：默认美国，日本、香港、节点选择可选；规则取自 Shunt_Rules 的 Twitter 列表（6 条 `IP-CIDR`、`DOMAIN-KEYWORD,twitter`、26 条域名后缀），排在 ProxyGFWlist 之前，`twitter` 关键词因此不再落到节点选择；`grok.x.com` 已由更靠前的 AI_Rules 接管，不会先命中 Twitter。
 - TikTok：默认日本，美国和香港可选；分流不等于地区解锁。
@@ -56,7 +56,7 @@ python Personal/build.py
 
 将修改后的 INI、`group-ui.yaml`、基础 YAML 和生成结果一并提交到自己的 fork；不修改上游原文件。通用规则 URL 继续引用 ACL4SSR 官方，Github/GitLab 引用 blackmatrix7，AI_Rules/Twitter/Claude 引用 Keviin560/Shunt_Rules，从而接收规则源更新。所有 Mihomo 远程规则源保持 `interval: 86400`，即每 24 小时更新，下载使用“节点选择”；`RULE-SET,AI_Rules,🤖 AI 服务` 决定的是 AI 网站流量的出口，两者用途不同。修改 INI 本身不会自动触发构建或自动同步妙妙屋的本地模板副本。
 
-本轮没有修改 Fake-IP、DNS、节点筛选表达式或图标，只把 `📰 刷帖` 改成回落组并给生成器加上 `fallback` 支持；`mihomo-base.yaml`、`group-ui.yaml`、`proxies: null` 均保持原样。
+2026-11-12 更新：为 `📰 刷帖` 补上“节点选择”作为第四个回落成员，保留前三项顺序和现有 AI 规则源；Loon 候选模板显式设置 `proxy-test-url = https://cp.cloudflare.com/generate_204`，全局测速超时仍为 5 秒。`mihomo-base.yaml`、`group-ui.yaml`、`proxies: null` 均保持原样。
 
 Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（纯文本）两套产物。本目录只引用 `.lsr`：文本可含 `DOMAIN`、`DOMAIN-SUFFIX`、`DOMAIN-KEYWORD`、`DOMAIN-REGEX`、`IP-CIDR,...,no-resolve` 等类型，Mihomo 按 `behavior: classical` 文本规则集读取，Loon 按 `[Remote Rule]` 读取，两端因此共用同一行 `ruleset=`。AI_Rules、Twitter、Claude 均照此接入，例如 `ruleset=🤖 AI 服务,https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/AI_Rules.lsr`；不要改用 `.mrs`，生成器只处理文本规则，`.mrs` 需要额外的 `format: mrs` 规则集与独立文件后缀。
 
@@ -75,7 +75,14 @@ Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（
 
 ## Loon 边界
 
-Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mihomo DNS，也不能直接导入 Surge 配置。候选版把中国 IP 直连放在远程列表末尾，使用 ACL4SSR `ChinaIp.list`，与 Mihomo 的最终 GEOIP 数据来源不同。生成器已把 `AI_Rules`、`Twitter`、`Claude` 三条 `.lsr`、Github 新默认值和 `📰 刷帖 = fallback, ...` 写入候选文件，但它仍是候选模板；Loon 的 fallback 参数语法（`url`、`interval`）也尚未在真机核对。共享规则顺序、NameRegexFilter、节点注入及 REALITY/Vision 连接仍需在实际 Loon 上验证；当前文件不作为已验收的手机/Mac 正式订阅，也不宣称已在真实 Loon 设备上通过。
+Loon 使用独立的 DNS 配置以及文本远程规则，不能直接照搬 Mihomo DNS，也不能直接导入 Surge 配置。候选版把中国 IP 直连放在远程列表末尾，使用 ACL4SSR `ChinaIp.list`，与 Mihomo 的最终 GEOIP 数据来源不同。生成器已把 `AI_Rules`、`Twitter`、`Claude` 三条 `.lsr`、Github 新默认值和 `📰 刷帖 = fallback, ...` 写入候选文件，但它仍是候选模板；Loon 的 fallback 参数语法（`url`、`interval`）也尚未在真机核对。共享规则顺序、NameRegexFilter、节点注入及 REALITY/Vision 连接仍需在实际 Loon 上验证；当前文件不作为已验收的手机/Mac 正式订阅，也不宣称已在真实 Loon 设备上通过。若客户端仍只显示 `Available`，或 AI 规则仍直接指向 `US`，说明加载的是另一份精简配置；推送仓库不会自动替换它。
+
+## 本轮验证（2026-11-12）
+
+- 重新构建后仍为 30 个分组、38 个远程规则源、43 条规则；两份生成文件重复构建字节一致，组引用无循环，Mihomo 1.19.29 配置检查通过。
+- 38 个实时规则源全部下载并加载，Shunt_Rules `AI_Rules.lsr` 本次为 214 条。23 项运行时分流检查通过，覆盖三类论坛、ChatGPT/Claude/Gemini/Copilot/Grok/Cursor/Windsurf/Hugging Face/OpenRouter 等 AI 服务，以及 Twitter、YouTube、Google、Github 和漏网规则的回归项；AI 的 `DOMAIN-REGEX` 规则也验证命中 `🤖 AI 服务`。
+- 隔离实例可将刷帖钉住“节点选择”，再经“手动切换”选到港美日之外的占位节点；解除钉住后恢复回落模式。验证使用本机占位 SOCKS5 出站并关闭 TUN/DNS，证明组引用、选择和规则匹配正确，不代表真实节点连接、自动故障切换时延或 Loon 设备验收。
+- 既有 ACL4SSR 列表仍有 Mihomo 不支持的 `URL-REGEX` 行被跳过；本轮没有增加此类规则，AI_Rules 的 `DOMAIN-REGEX` 正常加载。
 
 ## 历史验证（2026-09-07）
 
