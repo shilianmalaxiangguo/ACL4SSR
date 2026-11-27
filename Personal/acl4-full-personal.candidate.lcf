@@ -51,9 +51,9 @@ DOMAIN-SUFFIX,linux.do,📰 刷帖
 FINAL,🐟 漏网之鱼
 
 [Remote Rule]
-https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/AI_Rules.lsr, policy=🤖 AI 服务, tag=personal-AI_Rules, enabled=true
-https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Twitter.lsr, policy=🐦 Twitter, tag=personal-Twitter, enabled=true
-https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Claude.lsr, policy=🤖 AI 服务, tag=personal-Claude, enabled=true
+https://raw.githubusercontent.com/elianokk/Shunt_Rules/main/rule/Loon/AI_Rules.lsr, policy=🤖 AI 服务, tag=personal-AI_Rules, enabled=true
+https://raw.githubusercontent.com/elianokk/Shunt_Rules/main/rule/Loon/Twitter.lsr, policy=🐦 Twitter, tag=personal-Twitter, enabled=true
+https://raw.githubusercontent.com/elianokk/Shunt_Rules/main/rule/Loon/Claude.lsr, policy=🤖 AI 服务, tag=personal-Claude, enabled=true
 https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list, policy=🎯 全球直连, tag=personal-LocalAreaNetwork, enabled=true
 https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AI.list, policy=🤖 AI 服务, tag=personal-AI, enabled=true
 https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/OpenAi.list, policy=🤖 AI 服务, tag=personal-OpenAi, enabled=true

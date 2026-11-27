@@ -1,6 +1,6 @@
 # ACL4SSR Full NoAuto 个人扩展
 
-以 [ACL4SSR_Online_Full_NoAuto.ini](../Clash/config/ACL4SSR_Online_Full_NoAuto.ini) 为底稿，保留全部原有服务分类及规则源，增加刷帖、独立 Steam、TikTok、谷歌服务、Github、Twitter 与 Claude，并接入 Shunt_Rules 的完整 AI_Rules。ACL4SSR 原作及本目录派生配置遵循 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.zh)。基线为本 fork 的 `f7c4233`，图标扩展提交为 `0450624`（2026-09-08 核验）；2026-10-13 已同步上游 `802e3ab`（fork 与上游差距为 0），并引用 [Keviin560/Shunt_Rules](https://github.com/Keviin560/Shunt_Rules) 的 Twitter/Claude 规则；2026-10-20 接入完整 `AI_Rules.lsr`，并将 Github 默认出口改为美国；2026-10-28 把 `📰 刷帖` 从手动选择改为回落组。
+以 [ACL4SSR_Online_Full_NoAuto.ini](../Clash/config/ACL4SSR_Online_Full_NoAuto.ini) 为底稿，保留全部原有服务分类及规则源，增加刷帖、独立 Steam、TikTok、谷歌服务、Github、Twitter 与 Claude，并接入 Shunt_Rules 的完整 AI_Rules。ACL4SSR 原作及本目录派生配置遵循 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.zh)。基线为本 fork 的 `f7c4233`，图标扩展提交为 `0450624`（2026-09-08 核验）；2026-10-13 已同步上游 `802e3ab`（fork 与上游差距为 0），并引用 [elianokk/Shunt_Rules](https://github.com/elianokk/Shunt_Rules) 的 Twitter/Claude 规则；2026-10-20 接入完整 `AI_Rules.lsr`，并将 Github 默认出口改为美国；2026-10-28 把 `📰 刷帖` 从手动选择改为回落组。
 
 ## 使用哪个文件
 
@@ -54,11 +54,13 @@ python -m pip install PyYAML
 python Personal/build.py
 ```
 
-将修改后的 INI、`group-ui.yaml`、基础 YAML 和生成结果一并提交到自己的 fork；不修改上游原文件。通用规则 URL 继续引用 ACL4SSR 官方，Github/GitLab 引用 blackmatrix7，AI_Rules/Twitter/Claude 引用 Keviin560/Shunt_Rules，从而接收规则源更新。所有 Mihomo 远程规则源保持 `interval: 86400`，即每 24 小时更新，下载使用“节点选择”；`RULE-SET,AI_Rules,🤖 AI 服务` 决定的是 AI 网站流量的出口，两者用途不同。修改 INI 本身不会自动触发构建或自动同步妙妙屋的本地模板副本。
+将修改后的 INI、`group-ui.yaml`、基础 YAML 和生成结果一并提交到自己的 fork；不修改上游原文件。通用规则 URL 继续引用 ACL4SSR 官方，Github/GitLab 引用 blackmatrix7，AI_Rules/Twitter/Claude 引用 elianokk/Shunt_Rules，从而接收规则源更新。所有 Mihomo 远程规则源保持 `interval: 86400`，即每 24 小时更新，下载使用“节点选择”；`RULE-SET,AI_Rules,🤖 AI 服务` 决定的是 AI 网站流量的出口，两者用途不同。修改 INI 本身不会自动触发构建或自动同步妙妙屋的本地模板副本。
+
+2026-11-27 更新：Shunt_Rules 仓库已从 `Keviin560/Shunt_Rules` 迁移到 [elianokk/Shunt_Rules](https://github.com/elianokk/Shunt_Rules)（旧地址 301 跳转，`rule/Loon/*.lsr` 路径不变）。本次把 INI 中 AI_Rules、Twitter、Claude 三条规则源统一改为新仓库地址并重新生成 YAML / Loon 模板；规则内容仍由客户端每 24 小时拉取，不改变任何分组默认值。
 
 2026-11-12 更新：为 `📰 刷帖` 补上“节点选择”作为第四个回落成员，保留前三项顺序和现有 AI 规则源；Loon 候选模板显式设置 `proxy-test-url = https://cp.cloudflare.com/generate_204`，全局测速超时仍为 5 秒。`mihomo-base.yaml`、`group-ui.yaml`、`proxies: null` 均保持原样。
 
-Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（纯文本）两套产物。本目录只引用 `.lsr`：文本可含 `DOMAIN`、`DOMAIN-SUFFIX`、`DOMAIN-KEYWORD`、`DOMAIN-REGEX`、`IP-CIDR,...,no-resolve` 等类型，Mihomo 按 `behavior: classical` 文本规则集读取，Loon 按 `[Remote Rule]` 读取，两端因此共用同一行 `ruleset=`。AI_Rules、Twitter、Claude 均照此接入，例如 `ruleset=🤖 AI 服务,https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/AI_Rules.lsr`；不要改用 `.mrs`，生成器只处理文本规则，`.mrs` 需要额外的 `format: mrs` 规则集与独立文件后缀。
+Shunt_Rules 提供 `rule/Mihomo/*.mrs`（编译格式）与 `rule/Loon/*.lsr`（纯文本）两套产物。本目录只引用 `.lsr`：文本可含 `DOMAIN`、`DOMAIN-SUFFIX`、`DOMAIN-KEYWORD`、`DOMAIN-REGEX`、`IP-CIDR,...,no-resolve` 等类型，Mihomo 按 `behavior: classical` 文本规则集读取，Loon 按 `[Remote Rule]` 读取，两端因此共用同一行 `ruleset=`。AI_Rules、Twitter、Claude 均照此接入，例如 `ruleset=🤖 AI 服务,https://raw.githubusercontent.com/elianokk/Shunt_Rules/main/rule/Loon/AI_Rules.lsr`；不要改用 `.mrs`，生成器只处理文本规则，`.mrs` 需要额外的 `format: mrs` 规则集与独立文件后缀。
 
 本目录发布在自己的 fork，可使用以下入口：
 

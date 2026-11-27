@@ -375,7 +375,7 @@ rule-providers:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/AI_Rules.lsr
+    url: https://raw.githubusercontent.com/elianokk/Shunt_Rules/main/rule/Loon/AI_Rules.lsr
     path: ./ruleset/acl4-personal-AI_Rules.list
     interval: 86400
     proxy: 🚀 节点选择
@@ -383,7 +383,7 @@ rule-providers:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Twitter.lsr
+    url: https://raw.githubusercontent.com/elianokk/Shunt_Rules/main/rule/Loon/Twitter.lsr
     path: ./ruleset/acl4-personal-Twitter.list
     interval: 86400
     proxy: 🚀 节点选择
@@ -391,7 +391,7 @@ rule-providers:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/Keviin560/Shunt_Rules/main/rule/Loon/Claude.lsr
+    url: https://raw.githubusercontent.com/elianokk/Shunt_Rules/main/rule/Loon/Claude.lsr
     path: ./ruleset/acl4-personal-Claude.list
     interval: 86400
     proxy: 🚀 节点选择
